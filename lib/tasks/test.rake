@@ -1,22 +1,30 @@
 require 'rubocop/rake_task'
+
 # Add additional test suite definitions to the default test task here
+# rubocop: disable Metrics/BlockLength
 namespace :test do
   desc 'Runs RuboCop on specified directories'
   RuboCop::RakeTask.new(:rubocop) do |task|
     # Dirs: app, lib, test
     task.patterns = ['app/**/*.rb', 'lib/**/*.rb', 'test/**/*.rb']
+
     # Make it easier to disable cops.
     task.options << "--display-cop-names"
+
     # Abort on failures (fix your code first)
     task.fail_on_error = false
   end
+
   desc 'Runs Brakeman'
   # based on https://brakemanscanner.org/docs/rake/
   task :brakeman, :output_files do |_task, args|
     # Abort on failures (fix your code first)
     EXIT_ON_FAIL = false
+
     require 'brakeman'
+
     files = args[:output_files].split(' ') if args[:output_files]
+
     # For more options, see source here:
     # https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman.rb#L30
     options = {
@@ -28,8 +36,10 @@ namespace :test do
       pager: false,
       summary_only: true
     }
+
     tracker = Brakeman.run options
     failures = tracker.filtered_warnings + tracker.errors
+
     # Based on code here:
     # https://github.com/presidentbeef/brakeman/blob/f2376c/lib/brakeman/commandline.rb#L120
     if EXIT_ON_FAIL && failures.any?
@@ -39,6 +49,6 @@ namespace :test do
     end
   end
 end
-
 # rubocop: enable Metrics/BlockLength
+
 Rake::Task[:test].enhance ['test:rubocop', 'test:brakeman']
