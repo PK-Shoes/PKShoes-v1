@@ -68,3 +68,6 @@ gem 'jquery-rails'
 
 # MaterializeCSS
 gem 'materialize-sass'
+
+# Ruby Static Code Analyzer
+gem 'rubocop'
