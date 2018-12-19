@@ -19,6 +19,9 @@ bundle install
 cp config/database.yml-dist config/database.yml
 ```
 
+You may want to fill out the **development** and **test** section of your database.yml with your
+PostgreSQL username and password.
+
 ### Secrets
 Secrets encrypted in `credentials.yml.enc`.
 
